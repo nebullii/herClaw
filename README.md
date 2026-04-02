@@ -67,29 +67,23 @@ bash docker-install.sh
 
 The installer asks you a few simple questions. Here's what to expect:
 
-**1. Paste your Anthropic API key:**
+**1. Choose your AI provider(s) and paste your key:**
 ```
-  Anthropic API key (sk-ant-...): ▊
+  Which AI providers do you want to use?
+
+    1) Anthropic (Claude)
+    2) OpenAI (GPT-4)
+    3) Google Gemini
+    ...
+
+  Select providers: ▊
 ```
-Paste the key you saved in Step 1. **How to paste:**
+Pick at least one provider by number, then paste the key when prompted. **How to paste:**
 - **Windows:** Right-click → Paste, or press `Shift + Insert`
 - **Mac:** Press `Cmd + V`
 - **Linux:** Press `Ctrl + Shift + V`
 
-**2. Choose additional AI providers (optional):**
-```
-  Want to add more AI providers?
-
-    1) OpenAI (GPT-4)
-    2) Google Gemini
-    3) Mistral
-    ...
-
-  Add providers [Enter to skip]:
-```
-Type the numbers of providers you want (e.g., `1 2` for OpenAI + Gemini), or just press **Enter** to skip.
-
-**3. Wait ~2 minutes** while the installer does everything:
+**2. Wait ~2 minutes** while the installer does everything:
 - ✅ Installs Docker (if needed)
 - ✅ Checks your system
 - ✅ Builds the AI agent
@@ -201,14 +195,13 @@ Before doing anything, the installer checks that your system is ready. If someth
 
 ### Phase 2: API key configuration
 
-Asks for your Anthropic API key (the LLM key). Validates it before continuing:
+Presents a multi-provider picker — choose any combination of Anthropic, OpenAI, Google Gemini, Mistral, Groq, DeepSeek, OpenRouter, or Cohere. Validates each key before continuing:
 
-- Checks it starts with `sk-ant-` (catches wrong key types)
+- Checks provider-specific prefix (e.g. `sk-ant-` for Anthropic, `sk-proj-` for OpenAI)
 - Checks length (catches truncated copy-paste)
-- Detects if you pasted an OpenAI key by mistake
+- Detects if you pasted the wrong provider's key
 - Detects placeholder text left from the template
 - Strips invisible characters and whitespace
-- Retries up to 3 times with guidance on each failure
 
 ### Phase 3: Build and start
 
@@ -224,10 +217,10 @@ If the container crashes after starting, it reads the logs and diagnoses:
 
 | Crash reason | How it's detected | What it tells you |
 |---|---|---|
-| Missing API key | Logs mention "No Anthropic API key" | Check .env file, add key |
+| Missing API key | Logs mention "No AI provider API key" | Check .env file, add at least one provider key |
 | Empty API key | Logs mention "empty" or "blank" | Paste actual key after = sign |
-| Wrong key type | Logs mention "OpenAI key" | Anthropic keys start with sk-ant- |
-| Key too short | Logs mention "too short" | Copy the full key from console |
+| Wrong key type | Logs mention wrong provider | Check the key prefix matches your provider |
+| Key too short | Logs mention "too short" | Copy the full key from your provider's console |
 | Placeholder left | Logs mention "your-key-here" | Replace placeholder with real key |
 | Permission denied | Logs mention "EACCES" | Delete volume, recreate |
 | Module not found | Logs mention "MODULE_NOT_FOUND" | Uninstall and reinstall |
@@ -259,7 +252,7 @@ Automatically checks and fixes:
   │ API key file permissions (600)           │  ✓     │
   │ Linux capabilities dropped               │  ✓     │
   │ Privilege escalation blocked             │  ✓     │
-  │ Memory limit set (1GB)                   │  ✓     │
+  │ Memory limit set (2GB)                   │  ✓     │
   │ PID namespace isolated                   │  ✓     │
   │ .env protected by .gitignore             │  ✓     │
   └──────────────────────────────────────────┴────────┘
@@ -267,65 +260,6 @@ Automatically checks and fixes:
 ```
 
 ---
-
-## Step-by-Step: Basic Install (Complete Example)
-
-This walks you through everything from zero to a working AI agent in your browser.
-
-### What you need
-
-- Docker Desktop installed (installer helps if you don't have it)
-- An Anthropic API key (free tier at [console.anthropic.com](https://console.anthropic.com))
-
-### 1. Get your Anthropic API key
-
-1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Create an account (free)
-3. Click **API Keys** → **Create Key** → name it "openclaw"
-4. Copy the key (starts with `sk-ant-`)
-5. **Test it works** (optional but recommended):
-```bash
-curl -s https://api.anthropic.com/v1/messages \
-  -H "x-api-key: YOUR_KEY_HERE" \
-  -H "anthropic-version: 2023-06-01" \
-  -H "content-type: application/json" \
-  -d '{"model":"claude-sonnet-4-20250514","max_tokens":10,"messages":[{"role":"user","content":"hi"}]}'
-```
-If you see a JSON response with `"content"`, your key works. If you see `"authentication_error"`, the key is invalid — create a new one.
-
-### 2. Run the installer
-
-```bash
-git clone https://github.com/shilpa-kulkarni-14/openclaw-docker-installer.git
-cd openclaw-docker-installer
-./docker-install.sh
-```
-
-### 3. Paste your API key when asked
-
-```
-  Anthropic API key (sk-ant-...): ▊
-```
-
-Press Enter to skip optional extra providers.
-
-### 4. Wait ~2 minutes
-
-The installer builds the image, starts the container, checks health, and opens your browser.
-
-### 5. Type "hello"
-
-The dashboard opens in your browser with a chat box. Type **hello** and press Enter. The AI responds. **That's it — you're done.**
-
-### 6 (Optional): Add a chat channel
-
-Want your AI on Telegram, Discord, or Slack? Run:
-
-```bash
-./docker-install.sh --channels
-```
-
-Then follow the channel-specific setup instructions.
 
 ---
 
@@ -365,7 +299,7 @@ It checks everything and auto-fixes what it can:
 - .env file exists, permissions correct, key format valid
 - Port binding (localhost-only?)
 - Gateway responding to health checks
-- Network connectivity to Anthropic API
+- Network connectivity to AI provider APIs
 
 Example:
 
@@ -390,7 +324,7 @@ Example:
 | 1 | Container isolation | Your agent runs in its own sandbox, separate from your computer |
 | 2 | All capabilities dropped | The agent has zero special system powers |
 | 3 | No privilege escalation | Nothing inside the container can become root |
-| 4 | Resource limits | Max 1GB RAM, 2 CPUs, 200 processes (can't hog your machine) |
+| 4 | Resource limits | Max 2GB RAM, 2 CPUs, 200 processes (can't hog your machine) |
 | 5 | Non-root user | Runs as a limited user, not as admin |
 | 6 | Localhost-only port | Only your computer can talk to the agent (not your WiFi network) |
 | 7 | Network isolation | Agent gets its own network, can't poke around your system |
@@ -405,14 +339,14 @@ Every time the container starts, it runs 11 checks:
 
 1. Is the API key present? (from Docker secrets or .env)
 2. Is the key empty/blank?
-3. Is the key the right type? (Anthropic, not OpenAI)
+3. Is the key the right type for the selected provider?
 4. Is the key too short? (truncated copy-paste)
 5. Does the key have invisible characters? (auto-cleans them)
 6. Is the config directory writable?
 7. Is the gateway config valid JSON?
 8. Does the config have an auth token?
 9. Is the OpenClaw binary installed?
-10. Can the container reach the Anthropic API?
+10. Can the container reach the internet?
 11. Is /tmp writable? (needed for skills)
 
 Each check has a specific error message and fix instructions if it fails.
@@ -435,7 +369,7 @@ Each check has a specific error message and fix instructions if it fails.
 | "Docker Hub rate limit" | Too many pulls (429 error) | Wait 15 min or `docker login` with free account |
 | "Build timed out" | Slow network | Retry — usually works on second attempt |
 | "Build killed (OOM)" | Docker doesn't have enough RAM | Docker Desktop → Settings → Resources → Memory → 4GB+ |
-| API key validation fails 3 times | Typos or wrong key | Get fresh key at console.anthropic.com |
+| API key validation fails | Typos or wrong key | Get a fresh key from your provider's console |
 
 ### After install (dashboard / browser)
 
@@ -494,7 +428,7 @@ docker compose restart
 | "invalid JSON" | Config file corrupted | Restart container (auto-recovers) |
 | "OpenClaw binary not found" | Image corrupted | `docker compose build --no-cache` |
 | "cannot reach the internet" | No internet in container | Restart Docker Desktop, check connection |
-| Exit code 137 | Out of memory | Increase `memory: 1G` to `2G` in docker-compose.yml |
+| Exit code 137 | Out of memory | Increase `memory: 2G` to `4G` in docker-compose.yml |
 | Exit code 139 | Crash (segfault) | `./docker-install.sh --uninstall && ./docker-install.sh` |
 
 ---
@@ -504,13 +438,18 @@ docker compose restart
 ```
 openclaw-docker-installer/
 ├── docker-install.sh          # The installer (auto-troubleshooting + 4 phases)
-├── docker-compose.yml         # Container config (12 security layers)
+├── docker-compose.yml         # Container config (security-hardened)
 ├── Dockerfile                 # Multi-stage minimal image
 ├── docker/
 │   └── entrypoint.sh          # Startup: 11 checks, validates, secures, starts
+├── scripts/
+│   └── patch-primary-model.sh # Detects provider and sets primary model in .env
 ├── .env.example               # Template — copy to .env and add your key
-├── .env                       # Your API key (git-ignored, chmod 600)
+├── .env                       # Your API keys (git-ignored, chmod 600)
 ├── .gitignore                 # Ensures .env is never committed
+├── .github/
+│   └── workflows/
+│       └── test-installer.yml # Cross-platform CI tests
 └── README.md                  # This file
 ```
 

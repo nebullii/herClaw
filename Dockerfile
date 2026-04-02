@@ -38,7 +38,6 @@ LABEL org.opencontainers.image.source="https://github.com/shilpa-kulkarni-14/ope
 #   curl     — health checks
 #   jq       — JSON config manipulation
 #   tini     — proper PID 1 init (handles SIGTERM gracefully)
-#   dumb-init — backup signal forwarding
 RUN apk add --no-cache \
     openssl \
     curl \

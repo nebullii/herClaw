@@ -32,7 +32,9 @@ mask_key() {
   if [ "$len" -le 12 ]; then
     echo "***"
   else
-    echo "${key:0:8}...${key: -4} (${len} chars)"
+    prefix="$(printf '%.8s' "$key")"
+    suffix="$(printf '%s' "$key" | tail -c 4)"
+    echo "${prefix}...${suffix} (${len} chars)"
   fi
 }
 

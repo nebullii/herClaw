@@ -152,7 +152,7 @@ prompt_secret() {
   echo -ne "  $prompt"
   read -rs value
   echo ""
-  eval "$varname='$value'"
+  printf -v "$varname" '%s' "$value"
 }
 
 # ── Parse Arguments ─────────────────────────────────────────────────────────
