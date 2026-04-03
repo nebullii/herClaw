@@ -317,6 +317,24 @@ Example:
 
 ---
 
+## Keeping Your API Keys Safe
+
+Your API key is like a password — it lets the AI work, and you don't want anyone else to have it. Here's what the installer does to protect it, and what you should do:
+
+**What the installer handles automatically:**
+- Your key is stored in a file (`.env`) that only you can read
+- It's never shown in full in any output — only the first and last few characters
+- It's blocked from `.git` so it can never be accidentally uploaded to the internet
+- When you uninstall, the key file is overwritten with random data before deletion
+
+**What you should do:**
+- **Don't share your terminal output** (screenshots, copy-paste) with others — it may contain your dashboard URL with your access token
+- **Don't edit `docker-compose.yml`** unless you know what you're doing — changing `127.0.0.1` to `0.0.0.0` would expose your agent to your entire WiFi network
+- **If you're on a shared computer** (family, work, library), your API key is only as safe as your user account. Use your own laptop if possible
+- **If you think your key leaked**, go to your provider's console (e.g. aistudio.google.com) and delete the old key, then create a new one and run `./docker-install.sh --keys`
+
+---
+
 ## Security: 11 Layers of Protection
 
 | # | Protection | Plain English |

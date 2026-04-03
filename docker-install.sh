@@ -65,6 +65,9 @@ else
   LOG_FILE="/tmp/openclaw-docker-install-$(date +%Y%m%d-%H%M%S).log"
 fi
 
+# Lock down log file permissions (contains diagnostic info, not keys)
+touch "$LOG_FILE" 2>/dev/null && chmod 600 "$LOG_FILE" 2>/dev/null || true
+
 ENV_FILE="$SCRIPT_DIR/.env"
 COMPOSE_FILE="$SCRIPT_DIR/docker-compose.yml"
 CONTAINER_NAME="openclaw-agent"
