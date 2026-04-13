@@ -1,0 +1,46 @@
+{
+  "username": "nebullii",
+  "name": "Neha (Nevi) Chaudhari",
+  "project": {
+    "name": "herClaw",
+    "tagline": "A personal AI agent with her own email and phone, in one Docker command.",
+    "description": "herClaw is a hardened, one-command install of OpenClaw wired to Inkbox for real-world comms. The goal is distribution to nontechnical users — the 90% who want an assistant but don't have API keys or GitHub accounts. Same agent identity across email today, Telegram and voice next, with persistent memory and an on-device workspace so conversations never leave the user's machine.",
+    "repo": "https://github.com/nebullii/herClaw",
+    "screenshots": [
+      "https://github.com/nebullii/herClaw/raw/main/docs/inkbox-email-demo.png"
+    ]
+  },
+  "stack": {
+    "agent_runtime": "OpenClaw",
+    "comms_layer": "Inkbox (email, SMS, voice)",
+    "model": "OpenAI gpt-4o-mini",
+    "distribution": "Docker + shell installer",
+    "language": ["bash", "javascript", "dockerfile"]
+  },
+  "built_at": "hack-a-sprint-2026",
+  "tracks": [
+    "AI agents",
+    "Open source / developer tools",
+    "Consumer"
+  ],
+  "team": [
+    {
+      "github": "nebullii",
+      "name": "Neha (Nevi) Chaudhari",
+      "role": "Builder"
+    }
+  ],
+  "highlights": [
+    "Fixed 3 real distribution-readiness bugs during the hackathon: startup race on `openclaw doctor --fix` (npm install hung the gateway), DNS pinned to 1.1.1.1/8.8.8.8 broke on networks that block UDP-53 to public resolvers, default OpenAI model swapped to gpt-4o-mini for tier-1 rate-limit headroom.",
+    "End-to-end email round-trip working live: iPhone Mail → Inkbox webhook → OpenClaw agent → reply arrives in sender's inbox in ~15 seconds.",
+    "Hardened Docker posture: all Linux capabilities dropped, no-new-privileges, file perms 700/600, CPU/memory/PID/log-size limits, host-DNS resolver for privacy.",
+    "Built for nontechnical, security-conscious users — the underserved audience in consumer AI."
+  ],
+  "links": {
+    "github": "https://github.com/nebullii/herClaw",
+    "installer_source": "https://github.com/nebullii/openclaw-docker-installer",
+    "openclaw": "https://openclaw.ai",
+    "inkbox": "https://inkbox.ai"
+  },
+  "submitted_at": "2026-04-13"
+}
