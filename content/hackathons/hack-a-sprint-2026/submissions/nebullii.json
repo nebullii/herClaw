@@ -6,6 +6,7 @@
     "tagline": "A personal AI agent with her own email and phone, in one Docker command.",
     "description": "herClaw is a hardened, one-command install of OpenClaw wired to Inkbox for real-world comms. The goal is distribution to nontechnical users — the 90% who want an assistant but don't have API keys or GitHub accounts. Same agent identity across email today, Telegram and voice next, with persistent memory and an on-device workspace so conversations never leave the user's machine.",
     "repo": "https://github.com/nebullii/herClaw",
+    "demo_video": "https://youtu.be/TMZUD7_xwXo",
     "screenshots": [
       "https://github.com/nebullii/herClaw/raw/main/docs/inkbox-email-demo.png"
     ]
