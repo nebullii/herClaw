@@ -21,7 +21,7 @@ set -e
 detect_model() {
   # Walk providers — first non-empty key wins
   if   [[ -n "${ANTHROPIC_API_KEY:-}"            ]]; then echo "anthropic/claude-sonnet-4-20250514"
-  elif [[ -n "${OPENAI_API_KEY:-}"               ]]; then echo "openai/gpt-4o"
+  elif [[ -n "${OPENAI_API_KEY:-}"               ]]; then echo "openai/gpt-4o-mini"
   elif [[ -n "${OPENROUTER_API_KEY:-}"           ]]; then echo "openrouter/auto"
   elif [[ -n "${GOOGLE_API_KEY:-}"               ]]; then echo "google/gemini-2.0-flash"
   elif [[ -n "${GOOGLE_GENERATIVE_AI_API_KEY:-}" ]]; then echo "google/gemini-2.5-flash"

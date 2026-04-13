@@ -198,7 +198,7 @@ PROFILE
 }
 
 add_auth_profile "anthropic"  "ANTHROPIC_API_KEY"  "claude-sonnet-4-20250514" "anthropic-messages"
-add_auth_profile "openai"     "OPENAI_API_KEY"     "gpt-4o"                   "openai-chat"
+add_auth_profile "openai"     "OPENAI_API_KEY"     "gpt-4o-mini"              "openai-chat"
 add_auth_profile "google"     "GOOGLE_API_KEY"     "gemini-2.0-flash"         "google-genai"
 add_auth_profile "mistral"    "MISTRAL_API_KEY"    "mistral-large-latest"     "mistral-chat"
 add_auth_profile "groq"       "GROQ_API_KEY"       "llama-3.3-70b-versatile"  "openai-chat"
@@ -653,14 +653,15 @@ echo ""
 # ============================================================================
 
 if command -v openclaw >/dev/null 2>&1; then
-  echo "  Running compatibility migrations..."
-  # Timeout after 30 seconds — doctor --fix can hang on network issues or
-  # broken configs, which would block the gateway from ever starting.
-  if timeout 30 openclaw doctor --fix 2>/dev/null; then
-    echo "  ✓ Migrations applied"
-  else
-    echo "  ℹ Migrations skipped (timed out or not needed)"
-  fi
+  echo "  Running compatibility migrations in background..."
+  # Run doctor --fix in the background so a hang (e.g. npm install on a slow
+  # or offline host) cannot block the gateway from starting. Use
+  # --kill-after so grandchildren (npm, node) are actually reaped, not just
+  # the doctor wrapper. 60s hard cap.
+  (
+    timeout --kill-after=5s --signal=TERM 60s openclaw doctor --fix >/tmp/openclaw-doctor.log 2>&1 || true
+  ) &
+  echo "  ✓ Migrations scheduled (logs: /tmp/openclaw-doctor.log inside container)"
 fi
 
 echo ""

@@ -46,11 +46,11 @@ services:
     networks:
       - openclaw-net
 
-    # ── DNS Hardening ──
-    # Pin to Cloudflare + Google DNS (prevents DNS hijacking on untrusted networks)
-    dns:
-      - 1.1.1.1
-      - 8.8.8.8
+    # ── DNS ──
+    # Use the Docker daemon's resolver (which proxies to the host's DNS).
+    # Pinning to 1.1.1.1 / 8.8.8.8 breaks on networks that block UDP-53 to
+    # public resolvers (corporate, café wifi, some ISPs). The host DNS is
+    # already trusted enough to run Docker itself, so reuse it.
 
     # ── Security: Drop ALL capabilities ──
     # Linux capabilities grant fine-grained root powers.
